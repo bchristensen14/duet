@@ -25,6 +25,10 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+        env:
+          # Formspree (or compatible) endpoint for waitlist signups.
+          # Set under Settings → Secrets and variables → Actions → Variables.
+          VITE_WAITLIST_ENDPOINT: ${{ vars.WAITLIST_ENDPOINT }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

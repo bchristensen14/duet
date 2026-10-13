@@ -1,0 +1,124 @@
+/* Shared brand tokens, base elements and buttons for the landing page and the demo. */
+
+:root {
+  --ink: #15122a;
+  --ink-2: #2e2a40;
+  --muted: #6e6880;
+  --line: #ddd8ea;
+  --bg: #ebe8f6;
+  --card: #fbf8f2;
+  --cream: #f6f2ea;
+  --violet: #5a3de6;
+  --violet-soft: #e3dcff;
+  --coral: #ff7a59;
+  --coral-deep: #c9502f;
+  --green: #1f8a5b;
+  --radius: 14px;
+  --shadow: 0 1px 2px rgb(21 18 42 / 0.06), 0 6px 20px rgb(21 18 42 / 0.06);
+
+  font-family: 'DM Sans', system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Space Grotesk', 'DM Sans', sans-serif;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+}
+
+a {
+  color: var(--violet);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+  background: none;
+  padding: 0;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.center {
+  text-align: center;
+}
+
+/* ---------- Buttons ---------- */
+
+.primary,
+.secondary,
+.ghost {
+  border-radius: 999px;
+  padding: 0.6rem 1.1rem;
+  font-weight: 700;
+  font-size: 0.92rem;
+  transition: transform 0.1s, background 0.15s;
+  white-space: nowrap;
+}
+
+.primary {
+  background: var(--violet);
+  color: white;
+}
+
+.primary:hover:not(:disabled) {
+  background: #4a2fd0;
+}
+
+.secondary {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.ghost {
+  border: 1.5px solid var(--line);
+  background: transparent;
+}
+
+.ghost:hover {
+  border-color: var(--ink-2);
+}
+
+.small {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.82rem;
+}

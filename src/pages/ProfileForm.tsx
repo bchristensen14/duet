@@ -54,6 +54,9 @@ export function ProfileForm({ onboarding }: { onboarding?: boolean }) {
     <div className={onboarding ? 'onboarding' : 'page narrow'}>
       {onboarding && (
         <header className="hero">
+          <a href="../" className="back-home">
+            ← About Duet
+          </a>
           <Logo size={44} />
           <h1>Duet Community</h1>
           <p>Show your work, find your scene, and meet the people you should be making things with.</p>
