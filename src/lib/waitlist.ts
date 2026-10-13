@@ -1,15 +1,13 @@
 export interface WaitlistSignup {
   email: string
-  name: string
-  role: string
-  city: string
+  /** Optional: features they want or anything else they'd like to tell us. */
   feedback: string
 }
 
 const ENDPOINT = import.meta.env.VITE_WAITLIST_ENDPOINT?.trim() || ''
 const STORAGE_KEY = 'duet-waitlist'
 
-/** True when signups are sent somewhere. Without an endpoint they only stay in this browser. */
+/** True when signups are sent somewhere. Without an endpoint (a preview build) nothing is collected. */
 export const waitlistConnected = ENDPOINT !== ''
 
 export const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
@@ -21,43 +19,42 @@ export const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test
 export async function joinWaitlist(signup: WaitlistSignup): Promise<void> {
   const payload = {
     email: signup.email.trim(),
-    name: signup.name.trim(),
-    role: signup.role,
-    city: signup.city.trim(),
     feedback: signup.feedback.trim(),
     source: 'landing',
     _subject: 'New Duet waitlist signup',
   }
 
-  if (waitlistConnected) {
-    const res = await fetch(ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify(payload),
-    })
-    if (!res.ok) throw new Error(`Waitlist signup failed (${res.status})`)
-  } else {
-    console.warn('VITE_WAITLIST_ENDPOINT is not set; this signup was only saved in this browser.', payload)
+  if (!waitlistConnected) {
+    console.warn('VITE_WAITLIST_ENDPOINT is not set; this signup was not sent anywhere.')
+    return
   }
 
-  rememberSignup(payload.email)
+  const res = await fetch(ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  if (!res.ok) throw new Error(`Waitlist signup failed (${res.status})`)
+  rememberSignup()
 }
 
-/** Remembers that this browser already joined, so a return visit shows the thank-you state. */
-function rememberSignup(email: string) {
+/**
+ * Remembers that this browser already joined, so a return visit shows the thank-you state.
+ * Only a flag is stored, never the email, so the next person on a shared device can't see it.
+ */
+function rememberSignup() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ email, joinedAt: Date.now() }))
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ joinedAt: Date.now() }))
   } catch {
     // Storage unavailable (private mode): the signup itself already went through.
   }
 }
 
-export function joinedEmail(): string | null {
+export function hasJoined(): boolean {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? (JSON.parse(raw).email ?? null) : null
+    return localStorage.getItem(STORAGE_KEY) !== null
   } catch {
-    return null
+    return false
   }
 }
 

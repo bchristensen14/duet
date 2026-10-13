@@ -60,6 +60,7 @@ export function ProfileForm({ onboarding }: { onboarding?: boolean }) {
           <Logo size={44} />
           <h1>Duet Community</h1>
           <p>Show your work, find your scene, and meet the people you should be making things with.</p>
+          <p className="demo-note">A demo with sample profiles. Nothing you enter leaves your browser.</p>
         </header>
       )}
       <form className="card form" onSubmit={submit}>

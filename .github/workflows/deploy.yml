@@ -24,6 +24,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - if: ${{ vars.WAITLIST_ENDPOINT == '' }}
+        run: echo "::warning::WAITLIST_ENDPOINT is not set, so the landing page waitlist will not collect signups. See README → Connecting the waitlist."
       - run: npm run build
         env:
           # Formspree (or compatible) endpoint for waitlist signups.

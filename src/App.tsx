@@ -63,7 +63,7 @@ export default function App() {
         </nav>
         <div className="me-menu">
           <a href="../#waitlist" className="waitlist-link">
-            Join waitlist
+            <span className="wide-only">Join </span>waitlist
           </a>
           <button className="me-btn" onClick={() => navigate('/me')} aria-label="Your profile">
             <Avatar creative={me} size={34} />

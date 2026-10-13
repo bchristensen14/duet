@@ -97,8 +97,11 @@ export function Premium() {
         <button className="primary" type="submit" disabled={!project.trim() || !disciplines.length}>
           Request a shortlist · €20
         </button>
-        <small className="hint">MVP: no payment is taken. Briefs are saved for the Duet team to follow up.</small>
-        {sent && <p className="success">Brief received. We'll be in touch with a vetted shortlist.</p>}
+        <small className="hint">
+          Demo: no payment is taken and briefs stay in your browser. <a href="../#waitlist">Join the waitlist</a> for
+          real searches.
+        </small>
+        {sent && <p className="success">Brief saved in this demo.</p>}
       </form>
 
       {state.briefs.length > 0 && (
@@ -108,7 +111,7 @@ export function Premium() {
             {state.briefs.map((b) => (
               <article key={b.id} className="card brief">
                 <div className="brief-top">
-                  <span className="badge badge-limited">In review</span>
+                  <span className="badge badge-limited">Demo</span>
                   <small className="muted">{timeAgo(b.createdAt)}</small>
                 </div>
                 <p>{b.project}</p>

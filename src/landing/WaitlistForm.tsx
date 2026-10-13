@@ -1,165 +1,158 @@
-import { useState, type FormEvent } from 'react'
-import { forgetSignup, isValidEmail, joinWaitlist, joinedEmail, waitlistConnected } from '../lib/waitlist'
-import { DISCIPLINES } from '../types'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { forgetSignup, hasJoined, isValidEmail, joinWaitlist, waitlistConnected } from '../lib/waitlist'
 
 type Status = 'idle' | 'sending' | 'error'
 
 const FEEDBACK_MAX = 1000
 
 export function WaitlistForm() {
-  const [joined, setJoined] = useState<string | null>(joinedEmail)
+  const [joined, setJoined] = useState(hasJoined)
+  // The address just submitted; kept in memory only, never stored.
+  const [submitted, setSubmitted] = useState<string | null>(null)
   const [status, setStatus] = useState<Status>('idle')
   const [email, setEmail] = useState('')
   const [emailTouched, setEmailTouched] = useState(false)
-  const [name, setName] = useState('')
-  const [role, setRole] = useState('')
-  const [city, setCity] = useState('')
   const [feedback, setFeedback] = useState('')
   const [honeypot, setHoneypot] = useState('')
+  const emailRef = useRef<HTMLInputElement>(null)
+  const doneRef = useRef<HTMLHeadingElement>(null)
+
+  // After a submit, move focus to the confirmation so screen readers announce it.
+  useEffect(() => {
+    if (submitted) doneRef.current?.focus()
+  }, [submitted])
 
   const emailInvalid = emailTouched && !isValidEmail(email)
+
+  const finish = () => {
+    setSubmitted(email.trim())
+    setJoined(true)
+    setStatus('idle')
+  }
 
   const submit = async (e: FormEvent) => {
     e.preventDefault()
     setEmailTouched(true)
-    if (!isValidEmail(email) || status === 'sending') return
-    // Bots fill every field; people never see this one.
-    if (honeypot) {
-      setJoined(email.trim())
+    if (!isValidEmail(email)) {
+      emailRef.current?.focus()
       return
     }
+    if (status === 'sending') return
+    // Bots fill every field; people never see this one.
+    if (honeypot) return finish()
     setStatus('sending')
     try {
-      await joinWaitlist({ email, name, role, city, feedback })
-      setJoined(email.trim())
-      setStatus('idle')
+      await joinWaitlist({ email, feedback })
+      finish()
     } catch {
       setStatus('error')
     }
   }
 
   if (joined) {
+    const preview = !waitlistConnected
     return (
-      <div className="waitlist-card waitlist-done" role="status">
-        <span className="done-mark" aria-hidden="true">
-          ✓
-        </span>
-        <h3>You're on the list</h3>
+      <div className="waitlist-done">
+        <h3 ref={doneRef} tabIndex={-1}>
+          {preview ? 'Preview only' : "You're on the list."}
+        </h3>
         <p>
-          We'll email <strong>{joined}</strong> as soon as Duet launches. Thanks for helping shape it.
+          {preview ? (
+            <>The waitlist isn't connected yet, so this signup wasn't sent anywhere.</>
+          ) : submitted ? (
+            <>
+              We'll email <strong>{submitted}</strong> when we launch.
+            </>
+          ) : (
+            <>We'll email you when we launch.</>
+          )}
         </p>
-        <a className="btn btn-primary" href="./demo/">
-          Try the demo while you wait →
-        </a>
-        <button
-          type="button"
-          className="text-btn"
-          onClick={() => {
-            forgetSignup()
-            setJoined(null)
-            setEmail('')
-            setEmailTouched(false)
-            setFeedback('')
-          }}
-        >
-          Sign up another email
-        </button>
+        <div className="done-actions">
+          <a className="btn btn-dark" href="./demo/">
+            Try the demo →
+          </a>
+          <button
+            type="button"
+            className="text-btn"
+            onClick={() => {
+              forgetSignup()
+              setJoined(false)
+              setSubmitted(null)
+              setEmail('')
+              setEmailTouched(false)
+              setFeedback('')
+              setHoneypot('')
+            }}
+          >
+            Use another email
+          </button>
+        </div>
       </div>
     )
   }
 
   return (
-    <form className="waitlist-card" onSubmit={submit} noValidate>
-      <label className="field">
-        <span>
-          Email <span className="req">(required)</span>
-        </span>
+    <form className="waitlist-form" onSubmit={submit} noValidate>
+      <div className="email-row">
+        <label className="sr-only" htmlFor="wl-email">
+          Email
+        </label>
         <input
+          ref={emailRef}
+          id="wl-email"
           type="email"
           name="email"
           autoComplete="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          onBlur={() => setEmailTouched(true)}
+          onBlur={() => setEmailTouched(email !== '')}
           placeholder="you@example.com"
           aria-invalid={emailInvalid}
-          aria-describedby={emailInvalid ? 'email-error' : undefined}
+          aria-describedby={emailInvalid ? 'wl-email-error' : undefined}
         />
-        {emailInvalid && (
-          <small id="email-error" className="field-error">
-            Please enter a valid email address.
-          </small>
-        )}
-      </label>
-
-      <div className="field-row">
-        <label className="field">
-          <span>First name</span>
-          <input name="name" autoComplete="given-name" value={name} onChange={(e) => setName(e.target.value)} />
-        </label>
-        <label className="field">
-          <span>City</span>
-          <input
-            name="city"
-            autoComplete="address-level2"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            placeholder="Copenhagen"
-          />
-        </label>
+        <button className="btn btn-dark" type="submit" disabled={status === 'sending'}>
+          {status === 'sending' ? 'Joining…' : 'Join the waitlist'}
+        </button>
       </div>
+      {emailInvalid && (
+        <p id="wl-email-error" className="field-error">
+          Enter a valid email address.
+        </p>
+      )}
 
-      <label className="field">
-        <span>I'm a…</span>
-        <select name="role" value={role} onChange={(e) => setRole(e.target.value)}>
-          <option value="">Choose one (optional)</option>
-          {DISCIPLINES.map((d) => (
-            <option key={d}>{d}</option>
-          ))}
-          <option>Other creative</option>
-          <option>Hiring for a label, studio, agency or brand</option>
-        </select>
-      </label>
-
-      <label className="field">
-        <span>What would you want Duet to do for you?</span>
+      <label className="feedback" htmlFor="wl-feedback">
+        <span>
+          Any feedback, or features you'd like to see? <span className="optional">Optional</span>
+        </span>
         <textarea
+          id="wl-feedback"
           name="feedback"
-          rows={4}
+          rows={3}
           maxLength={FEEDBACK_MAX}
           value={feedback}
           onChange={(e) => setFeedback(e.target.value)}
-          placeholder="Optional. A feature you'd love, a collaboration you're trying to find, or anything that would make you use it."
-          aria-describedby="feedback-count"
+          placeholder="A feature you'd love, or the collaborator you're looking for."
         />
-        <small id="feedback-count" className="field-hint">
-          Optional · {feedback.length}/{FEEDBACK_MAX}
-        </small>
       </label>
 
-      <label className="hp" aria-hidden="true">
-        Leave this empty
-        <input tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
-      </label>
-
-      <button className="btn btn-primary btn-block" type="submit" disabled={status === 'sending'}>
-        {status === 'sending' ? 'Joining…' : 'Join the waitlist'}
-      </button>
+      <div className="hp" aria-hidden="true">
+        <input
+          tabIndex={-1}
+          name="company_website"
+          autoComplete="off"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+        />
+      </div>
 
       <div aria-live="polite">
-        {status === 'error' && (
-          <p className="form-error">Something went wrong sending that. Check your connection and try again.</p>
-        )}
+        {status === 'error' && <p className="field-error">Couldn't send that. Please try again.</p>}
       </div>
       <p className="fine-print">
-        We'll only email you about Duet's launch. No spam, unsubscribe anytime.
-        {!waitlistConnected && (
-          <>
-            {' '}
-            <strong>Preview:</strong> the waitlist isn't connected yet, so signups stay in this browser.
-          </>
-        )}
+        {waitlistConnected
+          ? 'Early access and launch emails only. We never sell your data. Unsubscribe anytime.'
+          : "Preview: the waitlist isn't connected yet, so signups aren't collected."}
       </p>
     </form>
   )

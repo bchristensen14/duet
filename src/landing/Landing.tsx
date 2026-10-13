@@ -1,300 +1,245 @@
+import { useEffect, type CSSProperties } from 'react'
 import { Logo } from '../components/Logo'
 import { WaitlistForm } from './WaitlistForm'
 
-const PAINS = [
-  ['⏱', 'Hours lost searching', 'Scrolling Instagram and scattered sites to find one person who might fit.'],
-  ['✉', 'Cold DMs go unanswered', 'Messages to strangers mostly disappear into the void.'],
-  ['◎', 'No way to judge fit', "You can't tell if someone shares your vision until you've already committed."],
-  ['☼', 'Hard to get seen', 'Your work rarely travels beyond the people who already follow you.'],
-]
+const DISCIPLINES = ['Musicians', 'Dancers', 'Painters', 'Photographers', 'Writers', 'Filmmakers']
 
-const COMMUNITY = [
-  ['Showcase your portfolio', 'Share recordings, films, images and writing in one profile built for collaborators.'],
-  ['Discover your scene', 'Find creatives near you by discipline, style and availability.'],
-  ['Get suggested matches', 'See who fits you best, and why, before you send the first message.'],
+const MATCHES = [
+  { initials: 'MO', name: 'Maya Okafor', what: 'Cellist · Los Angeles', why: 'Looking for a composer', score: 100, hue: 30 },
+  { initials: 'RA', name: 'Ruth Abara', what: 'Pianist · San Francisco', why: 'Shared style: chamber', score: 97, hue: 200 },
+  { initials: 'ID', name: 'Inés Duarte', what: 'Choreographer · Los Angeles', why: 'Also in Los Angeles', score: 79, hue: 345 },
 ]
 
 const STEPS = [
-  ['Brief', 'Tell us the project, style, skills and timeline.'],
-  ['AI sources', 'We filter candidates by discipline, style, location and availability.'],
-  ['Humans vet', 'Our team reviews portfolios and judges creative chemistry.'],
-  ['Shortlist', 'A few vetted, available collaborators, with intros already made.'],
-]
-
-const DISCIPLINES = [
-  'Composers',
-  'Singers',
-  'Instrumentalists',
-  'Producers',
-  'DJs',
-  'Dancers',
-  'Choreographers',
-  'Painters',
-  'Illustrators',
-  'Photographers',
-  'Filmmakers',
-  'Writers',
-  'Poets',
+  ['Brief', 'Your project, style and timeline.'],
+  ['AI sources', 'Candidates filtered by fit.'],
+  ['Humans vet', 'We judge the creative chemistry.'],
+  ['Shortlist', 'Vetted people, intros made.'],
 ]
 
 const TEAM = [
-  ['Roger', 'Pianist', 'Marketing and anthropology', 18],
-  ['Ben', 'Pianist and singer-songwriter', 'Finance and entrepreneurship', 250],
-  ['Brian', 'Music producer', 'Physics', 160],
-  ['Jared', 'DJ and producer', 'Music and journalism', 300],
+  ['Roger', 'Pianist', 18],
+  ['Ben', 'Pianist & songwriter', 250],
+  ['Brian', 'Music producer', 160],
+  ['Jared', 'DJ & producer', 300],
 ] as const
 
+const gradient = (hue: number) =>
+  `linear-gradient(135deg, hsl(${hue} 70% 62%), hsl(${(hue + 40) % 360} 75% 52%))`
+
 export function Landing() {
+  // The browser jumps to #waitlist before React renders it, so links like
+  // "../#waitlist" from the demo would land at the top. Scroll once mounted.
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1))
+    if (id) document.getElementById(id)?.scrollIntoView()
+  }, [])
+
   return (
     <>
       <a className="skip-link" href="#main">
         Skip to content
       </a>
+      <a className="announce" href="#waitlist">
+        Launching first in Copenhagen. <strong>Join the waitlist →</strong>
+      </a>
+
       <header className="site-nav">
-        <a href="./" className="brand" aria-label="Duet home">
-          <Logo size={24} />
+        <a href="./" className="brand">
+          <Logo size={20} />
           <span>Duet</span>
         </a>
-        <nav aria-label="Sections">
+        <nav aria-label="Main">
           <a href="#how" className="nav-link">
             How it works
           </a>
           <a href="#team" className="nav-link">
             Team
           </a>
-          <a href="./demo/" className="btn btn-ghost-dark btn-sm">
+          <a href="./demo/" className="btn btn-light btn-sm nav-demo">
             Try the demo
           </a>
-          <a href="#waitlist" className="btn btn-primary btn-sm">
-            Join the waitlist
+          <a href="#waitlist" className="btn btn-dark btn-sm">
+            Join waitlist
           </a>
         </nav>
       </header>
 
       <main id="main">
         <section className="hero">
-          <div className="hero-copy">
-            <p className="eyebrow">Launching first in Copenhagen</p>
-            <h1>The headhunter for creative collaboration.</h1>
-            <p className="lede">
-              Musicians, dancers, painters, photographers, writers: tell us what your project needs and we'll hand you a
-              short list of collaborators who actually fit.
-            </p>
-            <div className="cta-row">
-              <a href="#waitlist" className="btn btn-primary btn-lg">
-                Join the waitlist
-              </a>
-              <a href="./demo/" className="btn btn-ghost-dark btn-lg">
-                Try the demo →
-              </a>
-            </div>
-            <p className="hero-note">Free to join. The demo runs in your browser, no sign-up needed.</p>
+          <h1>
+            The headhunter for <br className="br-wide" />
+            creative collaboration.
+          </h1>
+          <p className="lede">Tell us what your project needs. We'll find collaborators who actually fit.</p>
+          <div className="cta-row">
+            <a href="#waitlist" className="btn btn-dark btn-lg">
+              Join the waitlist
+            </a>
+            <a href="./demo/" className="btn btn-light btn-lg">
+              Try the demo →
+            </a>
           </div>
-          <MatchPreview />
-        </section>
-
-        <section className="section problem" aria-labelledby="problem-title">
-          <div className="persona">
-            <span className="persona-avatar" aria-hidden="true">
-              W
-            </span>
-            <div>
-              <p className="persona-meta">Meet William, 23 · Classical composer · California</p>
-              <blockquote>
-                “It's hard to find the right performers to collaborate with now that I've left the networks available to me
-                at music school.”
-              </blockquote>
-            </div>
-          </div>
-          <h2 id="problem-title">Finding the right collaborator shouldn't be a full-time job.</h2>
-          <p className="section-lede">Creatives in every discipline told us the same four things.</p>
-          <div className="pains">
-            {PAINS.map(([icon, title, text]) => (
-              <article key={title} className="pain">
-                <span className="pain-icon" aria-hidden="true">
-                  {icon}
-                </span>
-                <h3>{title}</h3>
-                <p>{text}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="insight" aria-label="What we learned">
-          <p className="insight-label">What 12 customer interviews told us</p>
-          <p className="insight-quote">
-            Creatives don't want another search tool. <em>They want the search done for them.</em>
-          </p>
-        </section>
-
-        <section className="section" id="how" aria-labelledby="how-title">
-          <h2 id="how-title">How Duet works</h2>
-          <p className="section-lede">A free community to show your work and meet people, and a service that searches for you when you have a real project.</p>
-
-          <div className="tiers">
-            <article className="tier">
-              <p className="tier-tag">Free</p>
-              <h3>Duet Community</h3>
-              <p className="tier-sub">A social app for creatives.</p>
-              <ul className="feature-list">
-                {COMMUNITY.map(([title, text]) => (
-                  <li key={title}>
-                    <strong>{title}</strong>
-                    <span>{text}</span>
-                  </li>
-                ))}
-              </ul>
-              <a href="./demo/" className="btn btn-secondary">
-                Try the Community demo →
-              </a>
-            </article>
-
-            <article className="tier tier-premium">
-              <p className="tier-tag">Premium · €20 per search</p>
-              <h3>Done-for-you search</h3>
-              <p className="tier-sub">For when you have a real project and no time to search.</p>
-              <ol className="steps">
-                {STEPS.map(([title, text], i) => (
-                  <li key={title}>
-                    <span className="step-n">{i + 1}</span>
-                    <span>
-                      <strong>{title}</strong>
-                      <span>{text}</span>
-                    </span>
-                  </li>
-                ))}
-              </ol>
-              <p className="tier-foot">AI makes us efficient. Humans make us accurate.</p>
-            </article>
-          </div>
-        </section>
-
-        <section className="section for-who" aria-labelledby="who-title">
-          <h2 id="who-title">For every creative discipline</h2>
-          <p className="section-lede">
-            Most collaboration tools are built for one kind of artist. Duet is built for the moment different kinds meet.
-          </p>
-          <ul className="discipline-cloud">
+          <ul className="hero-tags" aria-label="Built for">
             {DISCIPLINES.map((d) => (
               <li key={d}>{d}</li>
             ))}
           </ul>
         </section>
 
-        <section className="demo-band" aria-labelledby="demo-title">
-          <div>
-            <h2 id="demo-title">See it for yourself</h2>
-            <p>
-              Make a profile in 30 seconds, see who you'd match with and why, and message a collaborator. Everything stays
-              in your browser.
-            </p>
+        <section className="showcase" aria-label="Product preview">
+          <div className="panel panel-bloom">
+            <div className="window" aria-hidden="true">
+              <div className="window-head">
+                <span>Your matches</span>
+                <span className="window-sub">Suggested for a composer in Los Angeles</span>
+              </div>
+              {MATCHES.map((m, i) => (
+                <div key={m.name} className="match-row">
+                  <span className="avatar" style={{ background: gradient(m.hue) }}>
+                    {m.initials}
+                  </span>
+                  <span className="match-who">
+                    <strong>{m.name}</strong>
+                    <small>{m.what}</small>
+                  </span>
+                  <span className="match-why">{m.why}</span>
+                  <span className="score" style={{ '--pct': `${m.score}%` } as CSSProperties}>
+                    {m.score}
+                  </span>
+                  {i === 0 ? <span className="mini-btn">Say hello</span> : <span className="mini-btn ghosted">View</span>}
+                </div>
+              ))}
+            </div>
           </div>
-          <a href="./demo/" className="btn btn-primary btn-lg">
-            Try the demo →
-          </a>
         </section>
 
-        <section className="section waitlist" id="waitlist" aria-labelledby="waitlist-title">
-          <div className="waitlist-copy">
-            <h2 id="waitlist-title">Join the waitlist</h2>
-            <p>
-              We're launching the free community in Copenhagen first. Join to get early access, and tell us what you'd want
-              from Duet: we read every answer.
-            </p>
-            <ul className="perks">
-              <li>Early access to Duet Community</li>
-              <li>A say in what we build next</li>
-              <li>First in line for done-for-you search</li>
-            </ul>
-          </div>
-          <WaitlistForm />
+        <section className="statement">
+          <p className="label">From 12 interviews with creatives</p>
+          <p className="statement-text">
+            Creatives don't want another search tool. <span>They want the search done for them.</span>
+          </p>
         </section>
 
-        <section className="section team" id="team" aria-labelledby="team-title">
-          <h2 id="team-title">Built by creatives</h2>
-          <p className="section-lede">Four co-founders who've lived the problem we're solving.</p>
-          <div className="team-grid">
-            {TEAM.map(([name, craft, background, hue]) => (
-              <article key={name} className="member">
-                <span
-                  className="member-avatar"
-                  aria-hidden="true"
-                  style={{
-                    background: `linear-gradient(135deg, hsl(${hue} 70% 62%), hsl(${(hue + 40) % 360} 75% 52%))`,
-                  }}
-                >
+        <section className="how" id="how" aria-labelledby="how-title">
+          <h2 id="how-title" className="sr-only">
+            How Duet works
+          </h2>
+          <div className="how-grid">
+            <article className="panel how-panel">
+              <p className="label">Free · Duet Community</p>
+              <h3>Show your work. Meet your scene.</h3>
+              <p className="panel-text">Portfolios, discovery and suggested matches.</p>
+              <div className="stage stage-violet" aria-hidden="true">
+                <div className="post">
+                  <div className="post-head">
+                    <span className="avatar" style={{ background: gradient(40) }}>
+                      AN
+                    </span>
+                    <span>
+                      <strong>Amara Nwosu</strong>
+                      <small>Photographer · 2d ago</small>
+                    </span>
+                  </div>
+                  <div className="post-cover" />
+                  <div className="post-foot">
+                    <span>Green Room</span>
+                    <span className="like">♥ 24</span>
+                  </div>
+                </div>
+              </div>
+              <a href="./demo/" className="text-link">
+                Try the demo →
+              </a>
+            </article>
+
+            <article className="panel how-panel">
+              <p className="label">Premium</p>
+              <h3>We do the search for you.</h3>
+              <p className="panel-text">€20 per search, plus 1% of what the project earns.</p>
+              <div className="stage stage-coral" aria-hidden="true">
+                <div className="brief">
+                  <p className="brief-label">Brief</p>
+                  <p className="brief-text">String trio for a chamber premiere in March.</p>
+                  <div className="brief-tags">
+                    <span>Instrumentalist</span>
+                    <span>Contemporary</span>
+                    <span>Copenhagen</span>
+                  </div>
+                  <div className="brief-result">
+                    <span className="stack">
+                      <span className="avatar" style={{ background: gradient(200) }}>
+                        RA
+                      </span>
+                      <span className="avatar" style={{ background: gradient(30) }}>
+                        MO
+                      </span>
+                      <span className="avatar" style={{ background: gradient(280) }}>
+                        SL
+                      </span>
+                    </span>
+                    <span>
+                      <strong>Shortlist ready</strong>
+                      <small>3 vetted · intros sent</small>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <ol className="steps">
+            {STEPS.map(([title, text], i) => (
+              <li key={title} className="step">
+                <span className="step-n">{i + 1}</span>
+                <strong>{title}</strong>
+                <span>{text}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="team" id="team" aria-labelledby="team-title">
+          <p className="label">Team</p>
+          <h2 id="team-title">Built by creatives.</h2>
+          <ul className="team-list">
+            {TEAM.map(([name, craft, hue]) => (
+              <li key={name}>
+                <span className="avatar avatar-lg" aria-hidden="true" style={{ background: gradient(hue) }}>
                   {name[0]}
                 </span>
-                <h3>{name}</h3>
-                <p className="member-craft">{craft}</p>
-                <p className="member-bg">Co-founder · {background}</p>
-              </article>
+                <strong>{name}</strong>
+                <small>{craft}</small>
+              </li>
             ))}
+          </ul>
+        </section>
+
+        <section className="join" id="waitlist" aria-labelledby="waitlist-title">
+          <div className="panel join-panel">
+            <h2 id="waitlist-title">Be first in line.</h2>
+            <p className="panel-text">Early access to Duet in Copenhagen.</p>
+            <WaitlistForm />
           </div>
         </section>
       </main>
 
       <footer className="site-footer">
-        <a href="./" className="brand" aria-label="Duet home">
-          <Logo size={20} />
-          <span>Duet</span>
-        </a>
-        <p>The headhunter for creative collaboration.</p>
-        <nav aria-label="Footer">
-          <a href="./demo/">Try the demo</a>
-          <a href="#waitlist">Join the waitlist</a>
-        </nav>
+        <div className="footer-row">
+          <a href="./" className="brand">
+            <Logo size={18} />
+            <span>Duet</span>
+          </a>
+          <nav aria-label="Footer">
+            <a href="./demo/">Demo</a>
+            <a href="#waitlist">Waitlist</a>
+          </nav>
+          <p>© 2026 Duet</p>
+        </div>
+        <div className="wordmark" aria-hidden="true">
+          Duet
+        </div>
       </footer>
     </>
-  )
-}
-
-/** A static glimpse of the Matches screen from the demo. */
-function MatchPreview() {
-  return (
-    <div className="preview" aria-hidden="true">
-      <div className="preview-card">
-        <div className="preview-head">
-          <span className="preview-ring">
-            <b>100</b>
-            <small>fit</small>
-          </span>
-          <span className="preview-who">
-            <span className="preview-avatar" style={{ background: 'linear-gradient(135deg,#f0a35a,#e6c33a)' }}>
-              MO
-            </span>
-            <span>
-              <strong>Maya Okafor</strong>
-              <small>Cellist · Los Angeles</small>
-            </span>
-          </span>
-        </div>
-        <ul className="preview-reasons">
-          <li>You're looking for an instrumentalist</li>
-          <li>They're looking for a composer</li>
-          <li>Shared style: film score, chamber</li>
-          <li>Open to new projects</li>
-        </ul>
-        <span className="preview-btn">Say hello</span>
-      </div>
-      <div className="preview-card preview-card-back">
-        <div className="preview-head">
-          <span className="preview-ring preview-ring-87">
-            <b>87</b>
-            <small>fit</small>
-          </span>
-          <span className="preview-who">
-            <span className="preview-avatar" style={{ background: 'linear-gradient(135deg,#b45ae6,#e63aa6)' }}>
-              SL
-            </span>
-            <span>
-              <strong>Sora Lindqvist</strong>
-              <small>Soprano · San Francisco</small>
-            </span>
-          </span>
-        </div>
-      </div>
-    </div>
   )
 }
