@@ -35,3 +35,9 @@ npm run build    # type-check and production build into dist/
 
 Auth and a real database, media uploads, real-time messaging, notifications,
 an AI matcher trained on profile and portfolio signals, and payments for Premium briefs.
+
+## Deploy
+
+Pushes to the default branch deploy to GitHub Pages via `.github/workflows/deploy.yml`
+(one-time setup: repo **Settings → Pages → Source: GitHub Actions**).
+Live at https://bchristensen14.github.io/duet/
