@@ -11,10 +11,10 @@ Live at https://bchristensen14.github.io/duet/ (demo at `/duet/demo/`).
 
 ## Landing page
 
-Explains the product (problem, what we learned, free Community + Premium search, who it's for, team),
-links to the demo, and collects waitlist signups: email (required), plus optional first name, city,
-discipline (including "hiring for a label, studio, agency or brand") and a free-text
-"What would you want Duet to do for you?" feedback box.
+A minimal page (system UI font, no third-party requests) that explains the product with a product
+preview, the key interview insight, the free Community and Premium search, and the team; links to the
+demo; and collects waitlist signups: email (required) plus an optional
+"Any feedback, or features you'd like to see?" box.
 
 ### Connecting the waitlist
 
@@ -30,8 +30,8 @@ any service that accepts a JSON POST and returns a 2xx works the same way.
 Signups then appear in the Formspree dashboard. In Formspree's form settings, consider restricting
 submissions to the `bchristensen14.github.io` domain.
 
-Until the variable is set, the form still works but signups are only remembered in the visitor's
-browser, and the form shows a "Preview: the waitlist isn't connected yet" note so nobody is misled.
+Until the variable is set, the site is a preview: the form says signups aren't collected, nothing is
+sent or stored, and the deploy workflow logs a warning.
 Locally, put `VITE_WAITLIST_ENDPOINT=https://formspree.io/f/...` in `.env.local` to test against a real form.
 
 ## Demo (Duet Community MVP)

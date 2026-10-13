@@ -5,9 +5,9 @@ import { WaitlistForm } from './WaitlistForm'
 const DISCIPLINES = ['Musicians', 'Dancers', 'Painters', 'Photographers', 'Writers', 'Filmmakers']
 
 const MATCHES = [
-  { initials: 'MO', name: 'Maya Okafor', what: 'Cellist · Los Angeles', why: 'Looking for a composer', score: 100, hue: 30 },
-  { initials: 'RA', name: 'Ruth Abara', what: 'Pianist · San Francisco', why: 'Shared style: chamber', score: 97, hue: 200 },
-  { initials: 'ID', name: 'Inés Duarte', what: 'Choreographer · Los Angeles', why: 'Also in Los Angeles', score: 79, hue: 345 },
+  { initials: 'MO', name: 'Maya Okafor', role: 'Cellist', city: 'Los Angeles', why: 'Looking for a composer', score: 100, hue: 30 },
+  { initials: 'RA', name: 'Ruth Abara', role: 'Pianist', city: 'San Francisco', why: 'Shared style: chamber', score: 97, hue: 200 },
+  { initials: 'ID', name: 'Inés Duarte', role: 'Choreographer', city: 'Los Angeles', why: 'Also in Los Angeles', score: 79, hue: 345 },
 ]
 
 const STEPS = [
@@ -31,7 +31,12 @@ export function Landing() {
   // The browser jumps to #waitlist before React renders it, so links like
   // "../#waitlist" from the demo would land at the top. Scroll once mounted.
   useEffect(() => {
-    const id = decodeURIComponent(window.location.hash.slice(1))
+    let id = window.location.hash.slice(1)
+    try {
+      id = decodeURIComponent(id)
+    } catch {
+      // Malformed escape like "#100%": keep the raw hash.
+    }
     if (id) document.getElementById(id)?.scrollIntoView()
   }, [])
 
@@ -40,9 +45,7 @@ export function Landing() {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      <a className="announce" href="#waitlist">
-        Launching first in Copenhagen. <strong>Join the waitlist →</strong>
-      </a>
+      <p className="announce">Launching first in Copenhagen</p>
 
       <header className="site-nav">
         <a href="./" className="brand">
@@ -87,12 +90,12 @@ export function Landing() {
           </ul>
         </section>
 
-        <section className="showcase" aria-label="Product preview">
+        <section className="showcase">
           <div className="panel panel-bloom">
             <div className="window" aria-hidden="true">
               <div className="window-head">
                 <span>Your matches</span>
-                <span className="window-sub">Suggested for a composer in Los Angeles</span>
+                <span className="window-sub">Suggested for a composer</span>
               </div>
               {MATCHES.map((m, i) => (
                 <div key={m.name} className="match-row">
@@ -101,7 +104,10 @@ export function Landing() {
                   </span>
                   <span className="match-who">
                     <strong>{m.name}</strong>
-                    <small>{m.what}</small>
+                    <small>
+                      {m.role}
+                      <span className="city"> · {m.city}</span>
+                    </small>
                   </span>
                   <span className="match-why">{m.why}</span>
                   <span className="score" style={{ '--pct': `${m.score}%` } as CSSProperties}>
@@ -148,9 +154,6 @@ export function Landing() {
                   </div>
                 </div>
               </div>
-              <a href="./demo/" className="text-link">
-                Try the demo →
-              </a>
             </article>
 
             <article className="panel how-panel">
@@ -188,6 +191,7 @@ export function Landing() {
             </article>
           </div>
 
+          <p className="label steps-label">How Premium works</p>
           <ol className="steps">
             {STEPS.map(([title, text], i) => (
               <li key={title} className="step">

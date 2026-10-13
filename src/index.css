@@ -52,6 +52,11 @@
   color: var(--ink);
 }
 
+/* The nav scrolls horizontally, which would clip an outside focus ring. */
+.nav a:focus-visible {
+  outline-offset: -2px;
+}
+
 .me-menu {
   display: flex;
   align-items: center;
@@ -197,7 +202,7 @@ main {
 }
 
 .badge-open {
-  color: var(--green);
+  color: #166534;
   background: #dff3e9;
 }
 
@@ -208,7 +213,7 @@ main {
 
 .badge-busy {
   color: var(--muted);
-  background: #ebe8f0;
+  background: var(--panel);
 }
 
 .score-pill {
@@ -217,7 +222,7 @@ main {
   text-align: center;
   padding: 0.1rem 0.5rem;
   border-radius: 999px;
-  background: var(--coral);
+  background: var(--coral-deep);
   color: white;
   font-weight: 600;
   font-size: 0.82rem;
@@ -317,11 +322,12 @@ textarea {
   font-size: 0.95rem;
 }
 
-input:focus,
+input:not([type='checkbox']):focus,
 select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--violet);
+  box-shadow: 0 0 0 1px var(--violet), 0 0 0 4px rgb(90 61 230 / 0.15);
 }
 
 textarea {
@@ -342,7 +348,7 @@ legend {
 
 .segmented {
   display: inline-flex;
-  background: #ebe8f0;
+  background: #efefef;
   border-radius: 999px;
   padding: 3px;
   gap: 2px;
@@ -520,7 +526,7 @@ legend {
 }
 
 .like.liked {
-  color: var(--coral);
+  color: var(--coral-deep);
 }
 
 .work-wrap {
@@ -822,7 +828,7 @@ legend {
 }
 
 .thread-item:hover {
-  background: #f3efe6;
+  background: var(--panel);
 }
 
 .thread-item.active {
@@ -879,7 +885,7 @@ legend {
 
 .bubble small {
   font-size: 0.72rem;
-  opacity: 0.7;
+  opacity: 0.85;
 }
 
 .bubble.mine {
@@ -931,7 +937,7 @@ legend {
 }
 
 .step-n {
-  color: var(--coral);
+  color: var(--coral-deep);
   font-size: 1.4rem;
   font-weight: 600;
 }
@@ -939,6 +945,10 @@ legend {
 .step.dark {
   background: var(--ink);
   color: var(--cream);
+}
+
+.step.dark .step-n {
+  color: var(--coral);
 }
 
 .step.dark p {
@@ -993,7 +1003,7 @@ legend {
   }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 900px) {
   .topbar {
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -1007,6 +1017,9 @@ legend {
   .me-menu {
     margin-left: auto;
   }
+}
+
+@media (max-width: 720px) {
 
   .inbox {
     grid-template-columns: 1fr;
@@ -1040,7 +1053,6 @@ legend {
 }
 
 @media (max-width: 400px) {
-  .topbar .brand span,
   .wide-only {
     display: none;
   }

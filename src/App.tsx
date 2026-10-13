@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Avatar, Logo } from './components/ui'
 import { navigate, useRoute } from './lib/router'
 import { useStore } from './lib/store'
@@ -20,6 +21,11 @@ const NAV = [
 export default function App() {
   const { me, dispatch } = useStore()
   const [section = 'feed', param] = useRoute()
+
+  // On phones the tab row scrolls sideways; keep the current tab in view.
+  useEffect(() => {
+    document.querySelector('.nav a.active')?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+  }, [section, me])
 
   if (!me) return <ProfileForm onboarding />
 
