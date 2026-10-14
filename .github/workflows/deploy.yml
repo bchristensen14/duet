@@ -24,13 +24,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - if: ${{ vars.WAITLIST_ENDPOINT == '' }}
-        run: echo "::warning::WAITLIST_ENDPOINT is not set, so the landing page waitlist will not collect signups. See README → Connecting the waitlist."
+      - name: Check waitlist form is configured
+        run: |
+          if ! grep -Eq '^VITE_WAITLIST_FORM_ID=.+' .env; then
+            echo "::warning::The waitlist Google Form isn't set in .env, so the landing page won't collect signups. See README → Connecting the waitlist."
+          fi
       - run: npm run build
-        env:
-          # Formspree (or compatible) endpoint for waitlist signups.
-          # Set under Settings → Secrets and variables → Actions → Variables.
-          VITE_WAITLIST_ENDPOINT: ${{ vars.WAITLIST_ENDPOINT }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

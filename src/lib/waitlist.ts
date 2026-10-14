@@ -4,37 +4,46 @@ export interface WaitlistSignup {
   feedback: string
 }
 
-const ENDPOINT = import.meta.env.VITE_WAITLIST_ENDPOINT?.trim() || ''
 const STORAGE_KEY = 'duet-waitlist'
 
-/** True when signups are sent somewhere. Without an endpoint (a preview build) nothing is collected. */
-export const waitlistConnected = ENDPOINT !== ''
+const env = import.meta.env
+const FORM_ID = env.VITE_WAITLIST_FORM_ID?.trim() ?? ''
+// Accept "entry.123" or just "123".
+const entry = (id: string | undefined) => {
+  const v = id?.trim() ?? ''
+  return v && !v.startsWith('entry.') ? `entry.${v}` : v
+}
+const EMAIL_ENTRY = entry(env.VITE_WAITLIST_EMAIL_ENTRY)
+const FEEDBACK_ENTRY = entry(env.VITE_WAITLIST_FEEDBACK_ENTRY)
+
+/** True when signups go to the Google Form. Without it (a preview build) nothing is collected. */
+export const waitlistConnected = FORM_ID !== '' && EMAIL_ENTRY !== ''
 
 export const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
 
 /**
- * Sends a signup to the configured form endpoint (Formspree-compatible JSON POST).
- * Throws on network or server errors so the form can offer a retry.
+ * Submits a signup to the Google Form, which records it as a response
+ * (and in the linked Google Sheet, if one is set up).
+ *
+ * Google Forms doesn't allow cross-origin reads, so this posts in no-cors mode:
+ * the response is opaque, and only network failures can be detected. That's why
+ * the form IDs are checked once when they're configured (see README).
  */
 export async function joinWaitlist(signup: WaitlistSignup): Promise<void> {
-  const payload = {
-    email: signup.email.trim(),
-    feedback: signup.feedback.trim(),
-    source: 'landing',
-    _subject: 'New Duet waitlist signup',
-  }
-
   if (!waitlistConnected) {
-    console.warn('VITE_WAITLIST_ENDPOINT is not set; this signup was not sent anywhere.')
+    console.warn('The waitlist Google Form is not configured; this signup was not sent anywhere.')
     return
   }
 
-  const res = await fetch(ENDPOINT, {
+  const body = new URLSearchParams({ [EMAIL_ENTRY]: signup.email.trim() })
+  const feedback = signup.feedback.trim()
+  if (FEEDBACK_ENTRY && feedback) body.set(FEEDBACK_ENTRY, feedback)
+
+  await fetch(`https://docs.google.com/forms/d/e/${encodeURIComponent(FORM_ID)}/formResponse`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify(payload),
+    mode: 'no-cors',
+    body,
   })
-  if (!res.ok) throw new Error(`Waitlist signup failed (${res.status})`)
   rememberSignup()
 }
 
