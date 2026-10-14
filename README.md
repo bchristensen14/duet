@@ -25,21 +25,27 @@ Free, with no response limit.
 1. Create a Google Form with two questions:
    - **Email**: short answer, required.
    - **Feedback or features you'd like to see**: paragraph, optional.
-2. In the form's **Settings → Responses**: set *Collect email addresses* to **Do not collect**, and turn
-   **off** *Limit to 1 response* and any *Restrict to users in…* option (these require a Google sign-in).
-   Keep *Accepting responses* on, and **Publish** the form.
-3. Optional: in **Responses**, click *Link to Sheets* to collect signups in a spreadsheet.
-4. Copy the form's public link (**Send → link**) and run:
+   Keep it to one section.
+2. In **Settings → Responses**: set *Collect email addresses* to **Do not collect**, and turn **off**
+   *Limit to 1 response*. Both would make Google require a sign-in.
+3. Click **Publish**. Then under **Published → Manage → General access**, choose **Anyone with the link**,
+   and keep *Accepting responses* on. School and work (Google Workspace) accounts often default to
+   "people in your organization" and may not allow public forms at all; if so, use a personal Google account.
+4. Optional: in **Responses**, click *Link to Sheets* to collect signups in a spreadsheet.
+5. Click **Published → Copy responder link** and run:
 
    ```bash
    npm run waitlist:ids -- "https://docs.google.com/forms/d/e/…/viewform"
    ```
 
-   It prints three lines; paste them into `.env` and push. The deploy picks them up automatically.
+   It prints three lines. Replace the three `VITE_WAITLIST_*` lines in `.env` with them, and push.
+6. Once the deploy finishes, submit a test signup on the live site and check it appears under **Responses**.
+   Do this again whenever you change the form.
 
-The script also catches the settings that would make Google silently reject signups.
-That matters because Google doesn't let other sites read its replies (the page posts in `no-cors` mode),
-so only network failures show up as errors on the page. Re-run it whenever you edit the form's questions.
+Google doesn't let other sites read its replies (the page posts in `no-cors` mode), so the page can't tell
+when Google rejects a signup. The script is the safety net: it refuses forms that need a sign-in, collect
+emails themselves, have extra required questions or several sections, or aren't accepting responses, and
+says which setting to change. The test signup in step 6 covers anything it can't see.
 
 While `.env` is empty, the site is a preview: the form says signups aren't collected, nothing is sent
 or stored, and the deploy workflow logs a warning.

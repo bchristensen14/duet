@@ -25,10 +25,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Check waitlist form is configured
-        run: |
-          if ! grep -Eq '^VITE_WAITLIST_FORM_ID=.+' .env; then
-            echo "::warning::The waitlist Google Form isn't set in .env, so the landing page won't collect signups. See README → Connecting the waitlist."
-          fi
+        run: node scripts/check-waitlist-env.mjs
       - run: npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

@@ -16,8 +16,12 @@ const entry = (id: string | undefined) => {
 const EMAIL_ENTRY = entry(env.VITE_WAITLIST_EMAIL_ENTRY)
 const FEEDBACK_ENTRY = entry(env.VITE_WAITLIST_FEEDBACK_ENTRY)
 
-/** True when signups go to the Google Form. Without it (a preview build) nothing is collected. */
-export const waitlistConnected = FORM_ID !== '' && EMAIL_ENTRY !== ''
+/**
+ * True when signups go to the Google Form. Without it (a preview build) nothing is collected.
+ * A value that isn't a public form ID (e.g. the editor's ID) also stays in preview: posting to it
+ * would fail invisibly, since no-cors responses can't be read.
+ */
+export const waitlistConnected = /^1FAIpQL[\w-]{40,}$/.test(FORM_ID) && /^entry\.\d+$/.test(EMAIL_ENTRY)
 
 export const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
 
