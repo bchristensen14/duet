@@ -227,7 +227,6 @@ export function Landing() {
             <a href="./demo/">Demo</a>
             <a href="#waitlist">Waitlist</a>
           </nav>
-          <p>© 2026 Duet</p>
         </div>
         <div className="wordmark" aria-hidden="true">
           Duet

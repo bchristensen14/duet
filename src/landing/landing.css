@@ -923,10 +923,6 @@ body {
   color: var(--ink);
 }
 
-.footer-row p {
-  margin: 0;
-}
-
 .wordmark {
   margin-top: 1rem;
   font-size: clamp(7rem, 30vw, 22rem);
