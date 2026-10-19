@@ -1222,6 +1222,13 @@ mark.hl {
   color: var(--ink);
 }
 
+.find-missing {
+  margin: -0.25rem 0 1rem;
+  padding: 0.6rem 0.8rem;
+  border-left: 3px solid var(--line);
+  color: var(--muted);
+}
+
 .find-cta {
   display: flex;
   align-items: center;

@@ -457,6 +457,19 @@ const PEOPLE: Creative[] = [
     hue: 125,
     portfolio: [item('video', 'Live session: "Harbour Lights"', 'Four cameras, one take.', 8)],
   },
+  {
+    id: 'c-anton',
+    name: 'Anton Riis',
+    discipline: 'Instrumentalist',
+    role: 'Bassist',
+    location: 'Copenhagen, DK',
+    bio: 'Upright and electric bass. Plays in a jazz trio, does session work and fills in for bands on tour.',
+    styles: ['jazz', 'soul', 'indie', 'funk'],
+    lookingFor: ['Instrumentalist', 'Vocalist', 'Songwriter'],
+    availability: 'open',
+    hue: 210,
+    portfolio: [item('audio', 'Trio live at La Fontaine', 'Standards and two originals, recorded off the desk.', 9)],
+  },
 ]
 
 /** Attach photos (where a file exists) to each sample person and their portfolio items. */

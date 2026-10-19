@@ -1,7 +1,7 @@
 import { useMemo, useState, type CSSProperties, type FormEvent, type ReactNode } from 'react'
 import { Avatar, AvailabilityBadge } from '../components/ui'
 import { EXAMPLES, findPath } from '../lib/ask'
-import { findMatches, interpret, type Hit, type HitKind, type Interpretation } from '../lib/interpret'
+import { findMatches, interpret, quote, type Hit, type HitKind, type Interpretation } from '../lib/interpret'
 import { navigate } from '../lib/router'
 import { useStore } from '../lib/store'
 
@@ -83,7 +83,11 @@ export function Find({ query }: { query: string }) {
             {matches.length === 1 ? '1 person who fits' : matches.length ? `${matches.length} people who fit` : 'No one fits that yet'}
           </h2>
 
-          {!matches.length && (
+          {interp.missing.length > 0 && (
+            <p className="find-missing">Nobody in the demo matches {orList(interp.missing.map((h) => quote(h.text)))} yet.</p>
+          )}
+
+          {!matches.length && !interp.missing.length && (
             <p className="muted">
               Try naming a role (producer, photographer, drummer…), a style or a city, or pick one of these:{' '}
               {EXAMPLES.slice(0, 2).map((ex, i) => (
@@ -156,6 +160,12 @@ export function Find({ query }: { query: string }) {
       )}
     </div>
   )
+}
+
+/** “a”, “a” or “b”, “a”, “b” or “c”; repeats dropped regardless of case. */
+function orList(items: string[]): string {
+  const unique = items.filter((w, i) => items.findIndex((x) => x.toLowerCase() === w.toLowerCase()) === i)
+  return unique.length < 2 ? unique.join('') : `${unique.slice(0, -1).join(', ')} or ${unique[unique.length - 1]}`
 }
 
 function Highlighted({ text, hits }: { text: string; hits: Hit[] }) {
