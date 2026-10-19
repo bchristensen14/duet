@@ -80,6 +80,12 @@ How it works:
 - Matching (`src/lib/match.ts`) is a transparent weighted score standing in for the AI matcher:
   discipline fit in both directions, shared styles, same city or region, and availability.
   Swapping in a model-backed matcher means replacing `scoreMatch` / `suggestMatches`.
+- Find (`src/lib/interpret.ts`) reads the request with keyword lexicons (English and Danish) and a few
+  phrasing rules ("I'm a …", "looking for …", "drummer needed", "our band"), then quotes the visitor's
+  words back in each match reason.
+- Sample photos live in `public/photos/` and are listed in `src/data/photos.ts`. Avatars are AI-generated
+  faces of people who don't exist; portfolio covers are CC0 / public-domain photos from Openverse. Sources are
+  in `public/photos/CREDITS.md`. People without a photo fall back to coloured initials.
 
 ## Run it
 
