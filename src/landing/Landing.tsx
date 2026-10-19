@@ -1,12 +1,13 @@
 import { useEffect, type CSSProperties } from 'react'
 import { Logo } from '../components/Logo'
+import { PHOTOS } from '../data/photos'
 import { AskBox } from './AskBox'
 import { WaitlistForm } from './WaitlistForm'
 
 const MATCHES = [
-  { initials: 'MO', name: 'Maya Okafor', role: 'Cellist', city: 'Los Angeles', why: 'Looking for a composer', score: 100, hue: 30 },
-  { initials: 'RA', name: 'Ruth Abara', role: 'Pianist', city: 'San Francisco', why: 'Shared style: chamber', score: 97, hue: 200 },
-  { initials: 'ID', name: 'Inés Duarte', role: 'Choreographer', city: 'Los Angeles', why: 'Also in Los Angeles', score: 79, hue: 345 },
+  { id: 'c-maya', initials: 'MO', name: 'Maya Okafor', role: 'Cellist', city: 'Los Angeles', why: 'Looking for a composer', score: 100, hue: 30 },
+  { id: 'c-ruth', initials: 'RA', name: 'Ruth Abara', role: 'Pianist', city: 'San Francisco', why: 'Shared style: chamber', score: 97, hue: 200 },
+  { id: 'c-ines', initials: 'ID', name: 'Inés Duarte', role: 'Choreographer', city: 'Los Angeles', why: 'Also in Los Angeles', score: 79, hue: 345 },
 ]
 
 const STEPS = [
@@ -25,6 +26,18 @@ const TEAM = [
 
 const gradient = (hue: number) =>
   `linear-gradient(135deg, hsl(${hue} 70% 62%), hsl(${(hue + 40) % 360} 75% 52%))`
+
+/** A sample person's photo (same AI-generated face as in the demo), or initials if there's none. */
+function Face({ id, initials, hue }: { id: string; initials: string; hue: number }) {
+  const photo = PHOTOS[id]
+  return photo ? (
+    <img className="avatar avatar-photo" src={`./photos/${photo}`} alt="" loading="lazy" decoding="async" />
+  ) : (
+    <span className="avatar" style={{ background: gradient(hue) }}>
+      {initials}
+    </span>
+  )
+}
 
 export function Landing() {
   // The browser jumps to #waitlist before React renders it, so links like
@@ -88,9 +101,7 @@ export function Landing() {
               </div>
               {MATCHES.map((m, i) => (
                 <div key={m.name} className="match-row">
-                  <span className="avatar" style={{ background: gradient(m.hue) }}>
-                    {m.initials}
-                  </span>
+                  <Face id={m.id} initials={m.initials} hue={m.hue} />
                   <span className="match-who">
                     <strong>{m.name}</strong>
                     <small>
@@ -128,15 +139,16 @@ export function Landing() {
               <div className="stage stage-violet" aria-hidden="true">
                 <div className="post">
                   <div className="post-head">
-                    <span className="avatar" style={{ background: gradient(40) }}>
-                      AN
-                    </span>
+                    <Face id="c-amara" initials="AN" hue={40} />
                     <span>
                       <strong>Amara Nwosu</strong>
                       <small>Photographer · 2d ago</small>
                     </span>
                   </div>
-                  <div className="post-cover" />
+                  <div
+                    className="post-cover"
+                    style={PHOTOS['c-amara-1'] ? { backgroundImage: `url(./photos/${PHOTOS['c-amara-1']})` } : undefined}
+                  />
                   <div className="post-foot">
                     <span>Green Room</span>
                     <span className="like">♥ 24</span>
@@ -160,15 +172,9 @@ export function Landing() {
                   </div>
                   <div className="brief-result">
                     <span className="stack">
-                      <span className="avatar" style={{ background: gradient(200) }}>
-                        RA
-                      </span>
-                      <span className="avatar" style={{ background: gradient(30) }}>
-                        MO
-                      </span>
-                      <span className="avatar" style={{ background: gradient(280) }}>
-                        SL
-                      </span>
+                      <Face id="c-ruth" initials="RA" hue={200} />
+                      <Face id="c-maya" initials="MO" hue={30} />
+                      <Face id="c-sora" initials="SL" hue={280} />
                     </span>
                     <span>
                       <strong>Shortlist ready</strong>

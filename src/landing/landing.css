@@ -338,6 +338,12 @@ body {
   line-height: 1;
 }
 
+.avatar-photo {
+  display: block;
+  object-fit: cover;
+  background: var(--panel);
+}
+
 .avatar-lg {
   width: 48px;
   height: 48px;
@@ -586,6 +592,8 @@ body {
     radial-gradient(circle at 25% 35%, rgb(255 122 89 / 0.9), transparent 55%),
     radial-gradient(circle at 80% 70%, rgb(90 61 230 / 0.85), transparent 55%),
     #1c1a24;
+  background-size: cover;
+  background-position: center;
 }
 
 .post-foot {
