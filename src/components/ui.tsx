@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Logo } from './Logo'
+import { photoUrl } from '../lib/photos'
 import { navigate, timeAgo } from '../lib/router'
 import { useStore } from '../lib/store'
 import type { Availability, Creative, PortfolioItem, WorkKind } from '../types'
@@ -7,6 +8,19 @@ import type { Availability, Creative, PortfolioItem, WorkKind } from '../types'
 export { Logo }
 
 export function Avatar({ creative, size = 44 }: { creative: Creative; size?: number }) {
+  if (creative.photo) {
+    return (
+      <img
+        className="avatar avatar-photo"
+        src={photoUrl(creative.photo)}
+        alt=""
+        width={size}
+        height={size}
+        loading="lazy"
+        decoding="async"
+      />
+    )
+  }
   const initials = creative.name
     .split(' ')
     .map((p) => p[0])
@@ -63,6 +77,15 @@ const KIND_ICON: Record<WorkKind, string> = {
 }
 
 export function WorkCover({ work, hue }: { work: PortfolioItem; hue: number }) {
+  if (work.photo) {
+    return (
+      <div className={`cover cover-photo cover-${work.kind}`}>
+        <img src={photoUrl(work.photo)} alt="" loading="lazy" decoding="async" />
+        {work.kind !== 'image' && <span className="cover-icon">{KIND_ICON[work.kind]}</span>}
+        <span className="cover-kind">{work.kind}</span>
+      </div>
+    )
+  }
   return (
     <div
       className={`cover cover-${work.kind}`}

@@ -29,6 +29,8 @@ export interface PortfolioItem {
   title: string
   description: string
   link?: string
+  /** Photo file in public/photos/ shown as the cover. */
+  photo?: string
   createdAt: number
 }
 
@@ -45,8 +47,10 @@ export interface Creative {
   lookingFor: Discipline[]
   availability: Availability
   portfolio: PortfolioItem[]
-  /** Hue (0-360) used for the generated avatar. */
+  /** Hue (0-360) for the initials avatar and cover gradient when there's no photo. */
   hue: number
+  /** Avatar photo file in public/photos/ (AI-generated faces for the sample people). */
+  photo?: string
 }
 
 export interface Message {
