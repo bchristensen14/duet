@@ -150,6 +150,12 @@ main {
   line-height: 1;
 }
 
+.avatar-photo {
+  display: block;
+  object-fit: cover;
+  background: var(--panel);
+}
+
 .chips {
   display: flex;
   flex-wrap: wrap;
@@ -480,6 +486,44 @@ legend {
 .cover-icon {
   font-size: 2.6rem;
   opacity: 0.9;
+}
+
+.cover-photo {
+  overflow: hidden;
+  background: var(--ink);
+}
+
+.cover-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Keep the icon and kind label readable on any photo. */
+.cover-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.45), transparent 45%);
+}
+
+.cover-photo .cover-icon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.35);
+  backdrop-filter: blur(4px);
+  font-size: 1.4rem;
+}
+
+.cover-photo .cover-kind {
+  z-index: 1;
 }
 
 .cover-kind {

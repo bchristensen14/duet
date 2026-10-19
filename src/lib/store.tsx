@@ -81,7 +81,18 @@ function load(): AppState {
 /** Saved demos predate newer sample people and fields (like `role`); add those without touching user data. */
 function withNewSeeds(state: AppState): AppState {
   const seeds = new Map(SEED_CREATIVES.map((c) => [c.id, c]))
-  const saved = state.creatives.map((c) => (seeds.has(c.id) ? { ...seeds.get(c.id)!, ...c } : c))
+  const seedWork = new Map(SEED_CREATIVES.flatMap((c) => c.portfolio).map((w) => [w.id, w]))
+  const saved = state.creatives.map((c) => {
+    const seed = seeds.get(c.id)
+    if (!seed) return c
+    // Seed photos win: they're sample data, and older saves have none.
+    return {
+      ...seed,
+      ...c,
+      photo: seed.photo,
+      portfolio: c.portfolio.map((w) => (seedWork.has(w.id) ? { ...w, photo: seedWork.get(w.id)!.photo } : w)),
+    }
+  })
   const savedIds = new Set(saved.map((c) => c.id))
   return { ...state, creatives: [...saved, ...SEED_CREATIVES.filter((c) => !savedIds.has(c.id))] }
 }

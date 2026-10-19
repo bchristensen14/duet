@@ -1,4 +1,5 @@
 import type { AppState, Creative } from '../types'
+import { PHOTOS } from './photos'
 
 const DAY = 24 * 60 * 60 * 1000
 const now = Date.now()
@@ -11,7 +12,7 @@ const item = (
   daysAgo: number,
 ) => ({ id: `w${++n}`, kind, title, description, createdAt: now - daysAgo * DAY })
 
-export const SEED_CREATIVES: Creative[] = [
+const PEOPLE: Creative[] = [
   {
     id: 'c-maya',
     name: 'Maya Okafor',
@@ -457,6 +458,13 @@ export const SEED_CREATIVES: Creative[] = [
     portfolio: [item('video', 'Live session: "Harbour Lights"', 'Four cameras, one take.', 8)],
   },
 ]
+
+/** Attach photos (where a file exists) to each sample person and their portfolio items. */
+export const SEED_CREATIVES: Creative[] = PEOPLE.map((c) => ({
+  ...c,
+  photo: PHOTOS[c.id],
+  portfolio: c.portfolio.map((w, i) => ({ ...w, photo: PHOTOS[`${c.id}-${i + 1}`] })),
+}))
 
 export function seedState(): AppState {
   return {
