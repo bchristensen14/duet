@@ -166,7 +166,7 @@ export const SEED_CREATIVES: Creative[] = [
       item('audio', 'Glass: Etude No. 6', 'Practice-room recording, honest mistakes included.', 12),
     ],
   },
-  // Copenhagen and Nordic creatives, so typed requests from the launch city find people nearby.
+  // Copenhagen and Nordic creatives, so typed requests from there find people nearby.
   {
     id: 'c-freja',
     name: 'Freja Holm',

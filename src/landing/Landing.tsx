@@ -44,7 +44,6 @@ export function Landing() {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      <p className="announce">Launching first in Copenhagen</p>
 
       <header className="site-nav">
         <a href="./" className="brand">
@@ -212,7 +211,7 @@ export function Landing() {
         <section className="join" id="waitlist" aria-labelledby="waitlist-title">
           <div className="panel join-panel">
             <h2 id="waitlist-title">Be first in line.</h2>
-            <p className="panel-text">Early access to Duet in Copenhagen.</p>
+            <p className="panel-text">Early access to Duet.</p>
             <WaitlistForm />
           </div>
         </section>

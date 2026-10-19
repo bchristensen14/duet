@@ -121,21 +121,7 @@ body {
   text-decoration: underline;
 }
 
-/* ---------- Announcement + nav ---------- */
-
-.announce {
-  display: block;
-  margin: 0.75rem clamp(0.75rem, 2.5vw, 2rem) 0;
-  padding: 0.5rem 1rem;
-  border-radius: 10px;
-  background: var(--panel);
-  color: var(--muted);
-  font-size: 0.82rem;
-  text-align: center;
-  text-decoration: none;
-}
-
-
+/* ---------- Nav ---------- */
 
 .site-nav {
   position: sticky;
