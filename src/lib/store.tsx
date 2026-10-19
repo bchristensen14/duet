@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useReducer, type ReactNode } from 'react'
-import { AUTO_REPLIES, seedState } from '../data/seed'
+import { AUTO_REPLIES, SEED_CREATIVES, seedState } from '../data/seed'
 import type { AppState, Brief, Creative, Message, PortfolioItem } from '../types'
 
 const STORAGE_KEY = 'duet-community-v1'
@@ -71,11 +71,19 @@ function reducer(state: AppState, action: Action): AppState {
 function load(): AppState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) return { ...seedState(), ...JSON.parse(raw) }
+    if (raw) return withNewSeeds({ ...seedState(), ...JSON.parse(raw) })
   } catch {
     // Private mode or corrupt data: fall back to the seed.
   }
   return seedState()
+}
+
+/** Saved demos predate newer sample people and fields (like `role`); add those without touching user data. */
+function withNewSeeds(state: AppState): AppState {
+  const seeds = new Map(SEED_CREATIVES.map((c) => [c.id, c]))
+  const saved = state.creatives.map((c) => (seeds.has(c.id) ? { ...seeds.get(c.id)!, ...c } : c))
+  const savedIds = new Set(saved.map((c) => c.id))
+  return { ...state, creatives: [...saved, ...SEED_CREATIVES.filter((c) => !savedIds.has(c.id))] }
 }
 
 interface Store {

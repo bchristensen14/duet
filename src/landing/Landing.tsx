@@ -1,8 +1,7 @@
 import { useEffect, type CSSProperties } from 'react'
 import { Logo } from '../components/Logo'
+import { AskBox } from './AskBox'
 import { WaitlistForm } from './WaitlistForm'
-
-const DISCIPLINES = ['Musicians', 'Dancers', 'Painters', 'Photographers', 'Writers', 'Filmmakers']
 
 const MATCHES = [
   { initials: 'MO', name: 'Maya Okafor', role: 'Cellist', city: 'Los Angeles', why: 'Looking for a composer', score: 100, hue: 30 },
@@ -75,19 +74,10 @@ export function Landing() {
             creative collaboration.
           </h1>
           <p className="lede">Tell us what your project needs. We'll find collaborators who actually fit.</p>
-          <div className="cta-row">
-            <a href="#waitlist" className="btn btn-dark btn-lg">
-              Join the waitlist
-            </a>
-            <a href="./demo/" className="btn btn-light btn-lg">
-              Try the demo →
-            </a>
-          </div>
-          <ul className="hero-tags" aria-label="Built for">
-            {DISCIPLINES.map((d) => (
-              <li key={d}>{d}</li>
-            ))}
-          </ul>
+          <AskBox />
+          <p className="hero-alt">
+            Or <a href="#waitlist">join the waitlist</a> to be first in line.
+          </p>
         </section>
 
         <section className="showcase">

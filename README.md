@@ -16,6 +16,13 @@ preview, the key interview insight, the free Community and Premium search, and t
 demo; and collects waitlist signups: email (required) plus an optional
 "Any feedback, or features you'd like to see?" box.
 
+The hero asks **"What kind of collaboration are you looking for?"**. Submitting opens the demo at
+`demo/#/find?q=…` (the text stays in the URL hash, so it never reaches a server), which highlights the
+words it understood (who they are, who they need, style, project, place) and lists matching sample
+creatives with reasons that quote those words. Matching is keyword-based (`src/lib/interpret.ts`):
+role, style, project and city lexicons in English plus common Danish words, and a few phrasing rules
+("I'm a … looking for …", "drummer needed", "our band").
+
 ### Connecting the waitlist (Google Forms)
 
 GitHub Pages has no server, so the page submits signups to a Google Form in the background.
@@ -55,6 +62,8 @@ or stored, and the deploy workflow logs a warning.
 The free tier: a social app where creatives showcase their portfolio, discover people in their scene,
 and get suggested matches. Premium ("we do the search for you") is shown as a brief form.
 
+- **Find**: describe a collaboration in plain words and see who fits. Works without a profile; "Say hello"
+  starts a profile pre-filled from the description.
 - **Onboarding**: create a profile (discipline, location, styles, who you want to work with, availability).
   "Try as William" fills in the persona from customer interviews.
 - **Showcase**: a feed of community work (audio, video, image, text) with likes, filters, and posting to your own portfolio.

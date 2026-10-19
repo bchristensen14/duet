@@ -212,6 +212,103 @@ body {
   margin-top: 2rem;
 }
 
+/* "What kind of collaboration…" box, modelled on a search prompt. */
+.ask-wrap {
+  max-width: 640px;
+  margin: 2.25rem auto 0;
+  text-align: left;
+}
+
+.ask {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.9rem 0.9rem 0.75rem 1.1rem;
+  border: 1px solid #e2e2e2;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.05);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.ask:focus-within {
+  border-color: var(--violet);
+  box-shadow: 0 0 0 3px rgb(90 61 230 / 0.12), 0 10px 30px rgb(0 0 0 / 0.05);
+}
+
+.ask-label {
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.ask textarea {
+  width: 100%;
+  border: 0;
+  padding: 0.2rem 0;
+  resize: none;
+  background: transparent;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.ask textarea:focus {
+  outline: none;
+}
+
+.ask textarea::placeholder {
+  color: #737373;
+}
+
+.ask-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.ask-hint {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.ask-examples {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0.9rem 0 0;
+  padding: 0;
+}
+
+.ask-examples button {
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid #e5e5e5;
+  background: #fcfcfc;
+  color: var(--text);
+  font-size: 0.82rem;
+}
+
+.ask-examples button:hover {
+  border-color: #cfcfcf;
+  color: var(--ink);
+}
+
+.hero-alt {
+  margin: 1.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.hero-alt a {
+  color: var(--ink);
+  font-weight: 500;
+}
+
 .hero-tags {
   list-style: none;
   display: flex;
@@ -892,6 +989,10 @@ body {
 
   .cta-row .btn {
     flex: 1 1 100%;
+  }
+
+  .ask-foot .btn {
+    width: 100%;
   }
 
   .mini-btn {

@@ -1,17 +1,32 @@
 import { useState, type FormEvent } from 'react'
 import { Chip, Logo } from '../components/ui'
+import { interpret } from '../lib/interpret'
 import { navigate } from '../lib/router'
 import { uid, useStore } from '../lib/store'
 import { DISCIPLINES, type Availability, type Creative, type Discipline } from '../types'
 
-export function ProfileForm({ onboarding }: { onboarding?: boolean }) {
+/** Profile fields guessed from what a visitor typed into "What kind of collaboration are you looking for?". */
+function prefillFrom(query: string) {
+  const it = interpret(query)
+  const place = it.place
+  return {
+    discipline: it.self[0]?.discipline ?? (it.business ? ('Brand / business' as const) : undefined),
+    location: place?.city ? `${place.city}, ${place.country}` : '',
+    bio: it.text.trim(),
+    styles: [...new Set(it.styles.map((s) => s.token))].join(', '),
+    lookingFor: [...new Set(it.wanted.map((w) => w.discipline))],
+  }
+}
+
+export function ProfileForm({ onboarding, prefillQuery, next }: { onboarding?: boolean; prefillQuery?: string; next?: string }) {
   const { me, dispatch } = useStore()
+  const [pre] = useState(() => (!me && prefillQuery?.trim() ? prefillFrom(prefillQuery) : null))
   const [name, setName] = useState(me?.name ?? '')
-  const [discipline, setDiscipline] = useState<Discipline>(me?.discipline ?? 'Composer')
-  const [location, setLocation] = useState(me?.location ?? '')
-  const [bio, setBio] = useState(me?.bio ?? '')
-  const [styles, setStyles] = useState(me?.styles.join(', ') ?? '')
-  const [lookingFor, setLookingFor] = useState<Discipline[]>(me?.lookingFor ?? [])
+  const [discipline, setDiscipline] = useState<Discipline>(me?.discipline ?? pre?.discipline ?? 'Composer')
+  const [location, setLocation] = useState(me?.location ?? pre?.location ?? '')
+  const [bio, setBio] = useState(me?.bio ?? pre?.bio ?? '')
+  const [styles, setStyles] = useState(me?.styles.join(', ') ?? pre?.styles ?? '')
+  const [lookingFor, setLookingFor] = useState<Discipline[]>(me?.lookingFor ?? pre?.lookingFor ?? [])
   const [availability, setAvailability] = useState<Availability>(me?.availability ?? 'open')
 
   const toggle = (d: Discipline) =>
@@ -47,7 +62,8 @@ export function ProfileForm({ onboarding }: { onboarding?: boolean }) {
       hue: me?.hue ?? Math.floor(Math.random() * 360),
     }
     dispatch({ type: 'saveProfile', profile })
-    navigate(onboarding ? '/matches' : `/people/${profile.id}`)
+    // `next` only ever comes from our own links (e.g. "Say hello" on a match); keep it to in-app paths.
+    navigate(next?.startsWith('/') ? next : onboarding ? '/matches' : `/people/${profile.id}`)
   }
 
   return (
@@ -61,6 +77,7 @@ export function ProfileForm({ onboarding }: { onboarding?: boolean }) {
           <h1>Duet Community</h1>
           <p>Show your work, find your scene, and meet the people you should be making things with.</p>
           <p className="demo-note">A demo with sample profiles. Nothing you enter leaves your browser.</p>
+          {pre && <p className="demo-note prefilled">We filled this in from what you typed. Add your name and check it over.</p>}
         </header>
       )}
       <form className="card form" onSubmit={submit}>

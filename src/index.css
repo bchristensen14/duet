@@ -1061,3 +1061,148 @@ legend {
     text-transform: capitalize;
   }
 }
+
+/* ---------- Find (describe a collaboration) ---------- */
+
+.find {
+  max-width: 900px;
+}
+
+.find-request {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.find-request label {
+  font-weight: 500;
+}
+
+.find-request textarea {
+  resize: vertical;
+}
+
+.find-request-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  font-size: 0.88rem;
+}
+
+.find-examples {
+  margin-top: 0.25rem;
+}
+
+.understood {
+  margin-top: 1rem;
+}
+
+.label-title {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.understood-text {
+  margin: 0.6rem 0 0;
+  font-size: 1.15rem;
+  line-height: 1.7;
+}
+
+mark.hl {
+  color: var(--ink);
+  border-radius: 4px;
+  padding: 0.05em 0.25em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.hl-self {
+  background: #ece8ff;
+  box-shadow: inset 0 -2px 0 #5a3de6;
+}
+
+.hl-wanted {
+  background: #ffe6dc;
+  box-shadow: inset 0 -2px 0 #c2410c;
+}
+
+.hl-style {
+  background: #e0f2e9;
+  box-shadow: inset 0 -2px 0 #15803d;
+}
+
+.hl-project {
+  background: #fff1c2;
+  box-shadow: inset 0 -2px 0 #a16207;
+}
+
+.hl-place {
+  background: #e0ecff;
+  box-shadow: inset 0 -2px 0 #1d4ed8;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.5rem;
+  margin: 1rem 0 0;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legend dt {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.legend dd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0;
+}
+
+.legend-chip {
+  padding: 0.1rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: var(--ink);
+}
+
+.find-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.find-cta p {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+}
+
+.find-cta-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.find-cta-link {
+  text-decoration: none;
+  display: inline-block;
+}
+
+.hero .demo-note.prefilled {
+  color: var(--violet);
+}

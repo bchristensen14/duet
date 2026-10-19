@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 
-/** Minimal hash router: "#/people/c-maya" -> ["people", "c-maya"]. */
+/** Minimal hash router: "#/people/c-maya" -> ["people", "c-maya"]. A "?query" part is read with hashParams(). */
 export function useRoute(): string[] {
-  const parse = () => window.location.hash.replace(/^#\/?/, '').split('/').filter(Boolean)
+  const parse = () => window.location.hash.replace(/^#\/?/, '').split('?')[0].split('/').filter(Boolean)
   const [route, setRoute] = useState(parse)
 
   useEffect(() => {
@@ -15,6 +15,13 @@ export function useRoute(): string[] {
   }, [])
 
   return route
+}
+
+/** Query parameters after "?" in the hash, e.g. "#/find?q=..." -> q. */
+export function hashParams(): URLSearchParams {
+  const hash = window.location.hash
+  const i = hash.indexOf('?')
+  return new URLSearchParams(i >= 0 ? hash.slice(i + 1) : '')
 }
 
 export const navigate = (path: string) => {

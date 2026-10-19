@@ -11,6 +11,10 @@ export const DISCIPLINES = [
   'Filmmaker',
   'Writer',
   'Poet',
+  'Songwriter',
+  'DJ',
+  'Designer',
+  'Brand / business',
 ] as const
 
 export type Discipline = (typeof DISCIPLINES)[number]
@@ -33,6 +37,8 @@ export interface Creative {
   name: string
   age?: number
   discipline: Discipline
+  /** Specific role shown under the name, e.g. "Cellist" or "Music video director". */
+  role?: string
   location: string
   bio: string
   styles: string[]
