@@ -156,10 +156,19 @@ body {
 }
 
 .nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   color: var(--text);
   text-decoration: none;
   font-size: 0.9rem;
   padding: 0.4rem 0.7rem;
+}
+
+.ig-icon {
+  width: 1em;
+  height: 1em;
+  flex: none;
 }
 
 .nav-link:hover {
@@ -923,6 +932,9 @@ body {
 }
 
 .footer-row nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   color: var(--text);
   text-decoration: none;
 }
