@@ -24,8 +24,30 @@ const TEAM = [
   ['Jared', 'DJ & producer', 300],
 ] as const
 
+const INSTAGRAM_URL = 'https://www.instagram.com/duetcommunity/'
+
 const gradient = (hue: number) =>
   `linear-gradient(135deg, hsl(${hue} 70% 62%), hsl(${(hue + 40) % 360} 75% 52%))`
+
+function InstagramIcon() {
+  return (
+    <svg className="ig-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <circle cx="17.4" cy="6.6" r="1" fill="currentColor" />
+    </svg>
+  )
+}
+
+function InstagramLink({ className }: { className?: string }) {
+  return (
+    <a className={className} href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
+      <InstagramIcon />
+      Instagram
+      <span className="sr-only"> (@duetcommunity)</span>
+    </a>
+  )
+}
 
 /** A sample person's photo (same AI-generated face as in the demo), or initials if there's none. */
 function Face({ id, initials, hue }: { id: string; initials: string; hue: number }) {
@@ -70,6 +92,7 @@ export function Landing() {
           <a href="#team" className="nav-link">
             Team
           </a>
+          <InstagramLink className="nav-link" />
           <a href="./demo/" className="btn btn-light btn-sm nav-demo">
             Try the demo
           </a>
@@ -232,6 +255,7 @@ export function Landing() {
           <nav aria-label="Footer">
             <a href="./demo/">Demo</a>
             <a href="#waitlist">Waitlist</a>
+            <InstagramLink />
           </nav>
         </div>
         <div className="wordmark" aria-hidden="true">
