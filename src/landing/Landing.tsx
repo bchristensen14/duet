@@ -26,6 +26,23 @@ const TEAM = [
 
 const INSTAGRAM_URL = 'https://www.instagram.com/duetcommunity/'
 
+// Directory embed codes, kept as the provider's HTML so a crawler sees the real link and image.
+// Add another entry to feature a new launch.
+const FEATURED_BADGES = [
+  {
+    id: 'tinylaunch',
+    html: '<a href="https://tinylaunch.com" target="_blank" rel="noopener"><img src="https://tinylaunch.com/tinylaunch_badge_launching_soon.svg" alt="TinyLaunch Badge" style="width:202px; height:auto;" /></a>',
+  },
+  {
+    id: 'twelve-tools',
+    html: '<a href="https://twelve.tools" target="_blank">Featured on Twelve Tools</a>',
+  },
+  {
+    id: 'fazier',
+    html: '<a href="https://fazier.com" target="_blank"><img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" width=120 alt="Fazier badge" /></a>',
+  },
+]
+
 const gradient = (hue: number) =>
   `linear-gradient(135deg, hsl(${hue} 70% 62%), hsl(${(hue + 40) % 360} 75% 52%))`
 
@@ -46,6 +63,19 @@ function InstagramLink({ className }: { className?: string }) {
       Instagram
       <span className="sr-only"> (@duetcommunity)</span>
     </a>
+  )
+}
+
+function FeaturedOn() {
+  return (
+    <div className="featured-on">
+      <h2 className="sr-only">Featured on</h2>
+      <ul className="featured-on-list">
+        {FEATURED_BADGES.map((badge) => (
+          <li key={badge.id} dangerouslySetInnerHTML={{ __html: badge.html }} />
+        ))}
+      </ul>
+    </div>
   )
 }
 
@@ -258,6 +288,7 @@ export function Landing() {
             <InstagramLink />
           </nav>
         </div>
+        <FeaturedOn />
         <div className="wordmark" aria-hidden="true">
           Duet
         </div>
