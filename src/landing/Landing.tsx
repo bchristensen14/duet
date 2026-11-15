@@ -34,10 +34,6 @@ const FEATURED_BADGES = [
     html: '<a href="https://tinylaunch.com" target="_blank" rel="noopener"><img src="https://tinylaunch.com/tinylaunch_badge_launching_soon.svg" alt="TinyLaunch Badge" style="width:202px; height:auto;" /></a>',
   },
   {
-    id: 'twelve-tools',
-    html: '<a href="https://twelve.tools" target="_blank">Featured on Twelve Tools</a>',
-  },
-  {
     id: 'fazier',
     html: '<a href="https://fazier.com" target="_blank"><img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" width=120 alt="Fazier badge" /></a>',
   },
